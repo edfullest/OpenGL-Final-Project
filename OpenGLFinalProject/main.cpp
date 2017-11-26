@@ -7,9 +7,10 @@
 //
 
 #include <iostream>
+#include "Cylinder.h"
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    Cylinder cylinder(6, 2);
+    cylinder.render();
     return 0;
 }
