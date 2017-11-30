@@ -16,18 +16,21 @@
 
 class Cylinder
 {
-    public:
-        void render();
-        static Cylinder* getInstance(int n, int subdivisions);
-        Cylinder(int n, int subdivisions);
-        void exportToObj(std::string file_name);
-    protected:
-    private:
-        static Cylinder* instance;
-        std::vector<Face *> faces;
-        int subdivisions;
-        int num_faces;
-        void resetCylinder(int n, int subdivisions);
+public:
+    Cylinder(int n, int subdivisions);
+    ~Cylinder();
+    void render();
+    static Cylinder* getInstance(int n, int subdivisions);
+    void exportToObj(std::string file_name);
+    int subdivisions;
+    int num_faces;
+    void resetCylinder(int n, int subdivisions);
+    
+protected:
+private:
+    static Cylinder* instance;
+    std::vector<Face *> faces;
 };
 
 #endif // CYLINDER_H
+

@@ -1,14 +1,27 @@
 #include <string>
 #include "Cylinder.h"
 
+// We make cylinder a singleton so that there is only one instance running from it
+Cylinder * Cylinder::instance = NULL;
+Cylinder* Cylinder::getInstance(int n, int subdivisions){
+    if (Cylinder::instance == NULL){
+        Cylinder::instance = new Cylinder(n, subdivisions);
+    }
+    return Cylinder::instance;
+}
+
+Cylinder::~Cylinder(){
+    for (auto &face : faces){
+        delete face;
+    }
+}
 Cylinder::Cylinder(int n, int subdivisions)
 {
     this->subdivisions = subdivisions;
     this->num_faces = n;
-    Face* face;
     for(int i = 0; i < n; i++)
     {
-        face = new Face(subdivisions, false);
+        Face* face = new Face(subdivisions, false);
         face->setHeader(std::string("Main Face"));
         faces.push_back(face);
     }
@@ -20,18 +33,14 @@ void Cylinder::resetCylinder(int n, int subdivisions){
     for (auto &face : faces){
         delete face;
     }
-}
-
-Cylinder * Cylinder::instance = NULL;
-Cylinder* Cylinder::getInstance(int n, int subdivisions){
-    if (Cylinder::instance == NULL){
-        Cylinder::instance = new Cylinder(n, subdivisions);
-    }
-    else{
-//        Cylinder::instance->resetCylinder(n, subdivisions);
+    faces.clear();
+    for(int i = 0; i < n; i++)
+    {
+        Face* face = new Face(subdivisions, false);
+        face->setHeader(std::string("Main Face"));
+        faces.push_back(face);
     }
     
-    return Cylinder::instance;
 }
 
 void Cylinder::render()
@@ -59,7 +68,7 @@ void Cylinder::render()
     }
     glEnd();
     glPopMatrix();
-
+    
     
     glPushMatrix();
     // GL Line Loop for sides
@@ -71,7 +80,7 @@ void Cylinder::render()
         glEnd();
     }
     glPopMatrix();
-
+    
     glPushMatrix();
     
     // Dynamic face creation
@@ -79,7 +88,7 @@ void Cylinder::render()
         float x_start = sin(M_PI * 2.0f * i / num_faces);
         float y_start = cos(M_PI * 2.0f * i / num_faces);
         float z_start = 0.0f;
-
+        
         float x_end = sin(M_PI * 2.0f * (i + 1) / num_faces);
         float y_end = cos(M_PI * 2.0f * (i + 1) / num_faces);
         float z_end = height;
@@ -88,7 +97,7 @@ void Cylinder::render()
     glPopMatrix();
     
     glPopMatrix();
-
+    
 }
 
 void Cylinder::exportToObj(std::string file_name){
@@ -103,9 +112,9 @@ void Cylinder::exportToObj(std::string file_name){
         
         // Bottom left corner
         output << "v " << face->x_start << " "
-                       << face->y_start << " "
-                       << face->z_start <<
-                       std::endl;
+        << face->y_start << " "
+        << face->z_start <<
+        std::endl;
         indices[i] = i;
         i++;
         // Bottom right corner
@@ -134,15 +143,16 @@ void Cylinder::exportToObj(std::string file_name){
     }
     // Print faces
     output << "f " << indices[0] + 1 << " "
-                   << indices[1] + 1 << " "
-                   << indices[2] + 1 <<
-                   std::endl;
+    << indices[1] + 1 << " "
+    << indices[2] + 1 <<
+    std::endl;
     
     for(int i = 3; i < faces.size() * 4; i++){
         output << "f " << indices[i - 2] + 1 << " "
-                       << indices[i - 1] + 1 << " "
-                       << indices[i] + 1 <<
+        << indices[i - 1] + 1 << " "
+        << indices[i] + 1 <<
         std::endl;
     }
     output.close();
 }
+

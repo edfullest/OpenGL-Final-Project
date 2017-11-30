@@ -6,23 +6,6 @@
 //  Copyright © 2017 Eduardo Jesus Serna L. All rights reserved.
 //
 
-//#include <iostream>
-
-//
-//int main(int argc, const char * argv[]) {
-//    Cylinder cylinder(6, 2);
-//    cylinder.render();
-//    return 0;
-//}
-
-//
-//  Homework11_1_PlanetarySystem.cpp
-//  OpenGL
-//
-//  Created by Eduardo Jesus Serna L on 11/15/17.
-//  Copyright © 2017 Eduardo Jesus Serna L. All rights reserved.
-//
-
 #include <math.h>       /* sin */
 #include <iostream>
 #include <string>
@@ -66,7 +49,7 @@ float deltaAngleY = 0.0f;
 int xOrigin = -1;
 int yOrigin = -1;
 
-int number_faces = 3;
+int number_faces = 5;
 int number_subdivisions = 2;
 bool isMenuOn = false;
 float cylinderAngle = 0.0f;
@@ -106,7 +89,7 @@ void changeSize(int w, int h) {
     
     // Get Back to the Modelview
     glMatrixMode(GL_MODELVIEW);
-
+    
 }
 
 // ROTATIONS
@@ -194,15 +177,19 @@ static void processNormalKeys(unsigned char key, int e, int l) {
     }
     else if ((int)key == 49){
         number_faces++;
+        cylinder->resetCylinder(number_faces,number_subdivisions);
     }
     else if ((int)key == 50){
         number_subdivisions++;
+        cylinder->resetCylinder(number_faces,number_subdivisions);
     }
     else if ((int)key == 51){
         number_faces--;
+        cylinder->resetCylinder(number_faces,number_subdivisions);
     }
     else if ((int)key == 52){
         number_subdivisions--;
+        cylinder->resetCylinder(number_faces,number_subdivisions);
     }
     else if ((int)key == 27 ){
         exit(0);
@@ -212,11 +199,11 @@ static void processNormalKeys(unsigned char key, int e, int l) {
 void processSpecialKeys(int key, int xx, int yy) {
     switch (key) {
         case GLUT_KEY_LEFT :
-//            dollyLeft(1.1f);
+            //            dollyLeft(1.1f);
             cylinderAngle -= 0.8f;
             break;
         case GLUT_KEY_RIGHT :
-//            dollyRight(1.1f);
+            //            dollyRight(1.1f);
             cylinderAngle += 0.8f;
             break;
         case GLUT_KEY_UP :
@@ -271,7 +258,7 @@ void renderScene(void) {
     
     // Clear Color and Depth Buffers
     glClearColor(1.0f, 1.0f, 0.9f, 1.0f);
-
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     
@@ -282,7 +269,7 @@ void renderScene(void) {
               x + lx, y + ly, z + lz,
               0.0f, 1.0f, 0.0f);
     
-//    Cylinder *cylinder = Cylinder::getInstance(number_faces, number_subdivisions);
+    //    Cylinder *cylinder = Cylinder::getInstance(number_faces, number_subdivisions);
     if (!isMenuOn){
         
         glPushMatrix();
@@ -292,8 +279,8 @@ void renderScene(void) {
         glRotatef(cylinderAngle, 0.0f, 0.0f, 1.0f);
         
         glScalef(2.9f, 2.9f, 1.5f);
-        cylinder = new Cylinder(number_faces, number_subdivisions);
         cylinder->render();
+        
         glPopMatrix();
         glPushMatrix();
         glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
@@ -320,18 +307,18 @@ void renderScene(void) {
         drawString("Numero de Subdivisiones : " + (std::to_string(number_subdivisions)) + " ", x - 0.4f, y);
         glPopMatrix();
         
-
+        
     }
     
-
-
+    
+    
     glutSwapBuffers();
 }
 
 
 int main(int argc, char **argv) {
     // init GLUT and create window
-    
+    cylinder = Cylinder::getInstance(number_faces, number_subdivisions);
     glutInit(&argc, argv);
     
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -360,10 +347,11 @@ int main(int argc, char **argv) {
     glDisable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glLoadIdentity();
-
+    
     
     // enter GLUT event processing cycle
     glutMainLoop();
     
     return 1;
 }
+
