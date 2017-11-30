@@ -14,6 +14,7 @@ Cylinder::~Cylinder(){
     for (auto &face : faces){
         delete face;
     }
+    faces.clear();
 }
 Cylinder::Cylinder(int n, int subdivisions)
 {
@@ -50,7 +51,7 @@ void Cylinder::render()
     glPushMatrix();
     // GL Line Loop for Bottom
     glBegin(GL_LINE_LOOP);
-    int num_faces = (int)faces.size();
+    int num_faces = this->num_faces;
     float height = -1 * subdivisions;
     for(int i = 0; i < num_faces; i++)
     {

@@ -24,6 +24,7 @@ class Face
 {
     public:
         Face(int subdivisions, bool withText);
+        ~Face();
         void render(float x_start, float y_start, float x_end, float y_end, float z_start, float z_end);
         std::string getHeader();
         void setHeader(std::string header);
@@ -37,12 +38,13 @@ class Face
         float z_end;
     protected:
     private:
-//        std::vector<Face> faces;
         std::vector<FT_Face> ft_faces;
         int subdivisions;
         std::string text;
         std::string header;
         static std::string texts[];
+        FT_Library  library;
+    
 };
 
 
